@@ -1,0 +1,13 @@
+name,type,description
+repo_id,UInt64,the unique identity of a repository where this event was tragered
+repo_name,String,repository name
+actor_id,UInt64,GitHub user id of someone who trigger this event instance
+actor_login,String,GitHub user login of someone who trigger this event instance
+week,UInt8,Day of week
+hour,UInt8,Time of day
+issue_comment,UInt64,"the number of `issue comment` aggregate on repo_id,actor_id,week,hour"
+open_issue,UInt64,"the number of `open issue` aggregate on repo_id,actor_id,week,hour"
+open_pull,UInt64,"the number of `open pull` aggregate on repo_id,actor_id,week,hour"
+pull_review_comment,UInt64,"the number of `pull review comment` aggregate on repo_id,actor_id,week,hour"
+merge_pull,UInt64,"the number of `merge pull` aggregate on repo_id,actor_id,week,hour"
+score,UInt64,the activity(1*issue_comment+2*open_issue+3*open_pull+4*pul_review_comment+2*merge_pull)
