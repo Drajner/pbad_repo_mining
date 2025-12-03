@@ -1,5 +1,5 @@
 import pandas as pd
-from client import ClickhouseClient
+from simplified_client import ClickhouseClient
 from cncf_configs import cncf_repos
 '''
 the proxy class for getting data and saving data
@@ -107,6 +107,8 @@ if __name__ == '__main__':
     '''
     the config for clickhouse server
     '''
+
+    """
     server_address = "*"
     server_port = 22
     server_user_name = "*"
@@ -122,6 +124,9 @@ if __name__ == '__main__':
         remote_address, remote_port,
         remote_user_name, remote_user_passward,
         database)
-    dp=DataProxy(cc)
-    dp.get_data()
+    """
 
+    database = 'github_log'
+    cc = ClickhouseClient(database=database, user='script_user', password='generic_password')
+    dp = DataProxy(cc)
+    dp.get_data()

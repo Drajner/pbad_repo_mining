@@ -12,5 +12,9 @@ Here are descriptions of the Python script files:
 - `cncf_commit.py`:the file for dealing cncf commit data
 - `visualize.py`:the file for visualization
 
+DB setup:
 
+- Run docker compose: `docker compose up`
+- Fill db with schema.sql: `cat schema.sql | docker exec -i clickhouse clickhouse-client -n`
+- Fill db with data: `cat sample_data.sql | docker exec -i clickhouse clickhouse-client -n`
 
