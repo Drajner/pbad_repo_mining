@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from simplified_client import ClickhouseClient
 from cncf_configs import cncf_repos
@@ -94,14 +95,14 @@ class DataProxy:
                 data[zone+12]=c
             df[name]=data
         return df
-    def get_data(self):
-        self.get_basic_proxy().to_csv('data/basic.csv')
-        self.get_pareto_proxy().to_csv('data/pareto.csv')
-        self.get_behavior_distribution_proxy().to_csv('data/behavior_distribution.csv')
-        self.client.get_top_projects_ac().to_csv('data/top_projects_ac.csv')
-        self.get_day_week_activity_proxy().to_csv('data/day_week_activity.csv')
-        self.get_day_week_activity_based_time_zone_proxy().to_csv('data/day_week_activity_based_time_zone.csv')
-        self.get_time_zone_proxy().to_csv('data/time_zone.csv')
+    def get_data(self, absolute_path):
+        self.get_basic_proxy().to_csv(absolute_path + '/data/basic.csv')
+        self.get_pareto_proxy().to_csv(absolute_path + '/data/pareto.csv')
+        self.get_behavior_distribution_proxy().to_csv(absolute_path + '/data/behavior_distribution.csv')
+        self.client.get_top_projects_ac().to_csv(absolute_path + '/data/top_projects_ac.csv')
+        self.get_day_week_activity_proxy().to_csv(absolute_path + '/data/day_week_activity.csv')
+        self.get_day_week_activity_based_time_zone_proxy().to_csv(absolute_path + '/data/day_week_activity_based_time_zone.csv')
+        self.get_time_zone_proxy().to_csv(absolute_path + '/data/time_zone.csv')
 
 if __name__ == '__main__':
     '''
@@ -125,8 +126,9 @@ if __name__ == '__main__':
         remote_user_name, remote_user_passward,
         database)
     """
-
+    absolute_path = os.path.dirname(os.path.abspath(__file__))
+    print(absolute_path)
     database = 'github_log'
     cc = ClickhouseClient(database=database, user='script_user', password='generic_password')
     dp = DataProxy(cc)
-    dp.get_data()
+    dp.get_data(absolute_path)
