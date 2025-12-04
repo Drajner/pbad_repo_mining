@@ -1,5 +1,0 @@
-# outdated
-pandas~=1.1.3
-numpy~=1.19.2
-matplotlib~=3.3.2
-clickhouse-driver
