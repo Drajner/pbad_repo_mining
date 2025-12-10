@@ -261,4 +261,4 @@ if __name__ == '__main__':
     visualize_behavior_distribution(absolute_path)
     # visualize_working_hour_distribution(absolute_path)
     # visualize_working_hour_distribution_local_time(absolute_path)
-    visualize_time_zone_distribution(absolute_path)
+    # visualize_time_zone_distribution(absolute_path)
