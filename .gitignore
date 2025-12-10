@@ -4,3 +4,4 @@ supplementary_material/data
 supplementary_material/imgs
 *.idea*
 venv
+__MACOSX
