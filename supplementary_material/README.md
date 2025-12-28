@@ -54,3 +54,35 @@ inside IDE , \supplementary_material package:
 run:
 1. proxy.py
 2. visualize.py
+
+
+# build_file.py 
+This script receives github events from last 3 months and creates a file in GHArchive structure
+
+* GET https://api.github.com/repos/{OWNER}/{REPO}/events
+
+# RESULTS
+
+* imgs/pareto - sprawdzają zasadę 20/80
+     osie:
+        1. x: procent kontrybutorów
+        2. Y: skumulowany procent aktywności
+
+  - all.png: 
+  - cncf.png: projekty, które są hostowane lub wspierane w ramach CNCF, podzielone na 3 „poziomy dojrzałości”
+  - projects.png: porównanie konkretnych projektów - domyślnie tikv vs kubernetes (mniejszy vs duży)
+
+* imgs/behavior_distribution
+    kolumny:
+  1. c -> comment
+  2. oi -> open issue
+  3. op -> open pull request
+  4. rpr -> review pull request
+  5. mp -> merge pull request
+  6. AC -> humans
+  7. bots
+  
+     - what-all.png: ludzie i boty
+     - what-cncf.png: ludzie i boty
+     - what-maturity.png: tylko ludzie
+     - what-project.png: tylko ludzie
