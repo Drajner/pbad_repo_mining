@@ -3,5 +3,6 @@ supplementary_material/gharchive
 supplementary_material/data
 supplementary_material/imgs
 *.idea*
+supplementary_material/.idea
 venv
 __MACOSX
