@@ -1,5 +1,7 @@
 USE github_log;
 
+SET date_time_input_format = 'best_effort';
+
 INSERT INTO year2020
 (
     -- CORE EVENT FIELDS
@@ -17,21 +19,21 @@ INSERT INTO year2020
 
     -- REPO (if you have only repo_id / repo_name, drop the rest)
     -- repo_url,
-    -- repo_description,
-    -- repo_language,
-    -- repo_stargazers_count,
-    -- repo_forks_count,
+    repo_description,
+    repo_language,
+    repo_stargazers_count,
+    repo_forks_count,
     -- repo_open_issues_count,
-    -- repo_size,
-    -- repo_has_issues,
-    -- repo_has_projects,
-    -- repo_has_downloads,
-    -- repo_has_wiki,
-    -- repo_has_pages,
-    -- repo_default_branch,
-    -- repo_created_at,
-    -- repo_pushed_at,
-    -- repo_updated_at,
+    repo_size,
+    repo_has_issues,
+    repo_has_projects,
+    repo_has_downloads,
+    repo_has_wiki,
+    repo_has_pages,
+    repo_default_branch,
+    -- repo_created_at, DT
+    -- repo_pushed_at, DT
+    -- repo_updated_at, DT
 
     -------------------------------------------------------------
     -- ISSUE FIELDS (IssuesEvent, PullRequestEvent, etc.)
@@ -42,26 +44,26 @@ INSERT INTO year2020
     issue_body,
     -- issue_state,
     -- issue_locked,
-    -- issue_comments,
-    -- issue_created_at,
-    -- issue_updated_at,
-    -- issue_closed_at,
+    issue_comments,
+    -- issue_created_at, DT
+    -- issue_updated_at, DT
+    -- issue_closed_at, DT
 
-    -- issue_author_id,
-    -- issue_author_login,
-    -- issue_author_type,
-    -- issue_author_association,
+    issue_author_id,
+    issue_author_login,
+    issue_author_type,
+    issue_author_association,
 
-    -- issue_assignee_id,
-    -- issue_assignee_login,
+    issue_assignee_id,
+    issue_assignee_login,
 
     -------------------------------------------------------------
     -- ISSUE COMMENT (IssueCommentEvent)
     -------------------------------------------------------------
     issue_comment_id,
     issue_comment_body,
-    -- issue_comment_created_at,
-    -- issue_comment_updated_at,
+    -- issue_comment_created_at, DT
+    -- issue_comment_updated_at, DT
     issue_comment_author_association,
     issue_comment_author_id,
     issue_comment_author_login,
@@ -76,23 +78,23 @@ INSERT INTO year2020
     -- pull_locked,
     -- pull_title,
     -- pull_body,
-    -- pull_created_at,
-    -- pull_updated_at,
-    -- pull_closed_at,
+    -- pull_created_at, DT
+    -- pull_updated_at, DT
+    -- pull_closed_at, DT
 
-    -- pull_merged,
-    -- pull_merged_at,
-    -- pull_merge_commit_sha,
-    -- pull_merged_by_id,
-    -- pull_merged_by_login,
-    -- pull_merged_by_type,
+    pull_merged,
+    -- pull_merged_at, DT
+    pull_merged_commit_sha,
+    pull_merged_by_id,
+    pull_merged_by_login,
+    pull_merged_by_type,
 
-    -- pull_commits,
-    -- pull_additions,
-    -- pull_deletions,
-    -- pull_changed_files,
+    pull_commits,
+    pull_additions,
+    pull_deletions,
+    pull_changed_files,
     -- pull_comments,
-    -- pull_review_comments,
+    pull_review_comments,
 
     -- pull_base_ref,
     -- pull_head_ref,
@@ -102,25 +104,25 @@ INSERT INTO year2020
     -- pull_author_association,
     -- pull_draft,
 
-    -- pull_requested_reviewer_id,
-    -- pull_requested_reviewer_login,
-    -- pull_requested_reviewer_type,
+    pull_requested_reviewer_id,
+    pull_requested_reviewer_login,
+    pull_requested_reviewer_type,
 
     -------------------------------------------------------------
     -- PULL REQUEST REVIEW COMMENT (PullRequestReviewCommentEvent)
     -------------------------------------------------------------
-    -- pull_review_comment_id,
-    -- pull_review_comment_body,
-    -- pull_review_comment_path,
-    -- pull_review_comment_position,
+    pull_review_comment_id,
+    pull_review_comment_body,
+    pull_review_comment_path,
+    pull_review_comment_position,
     -- pull_review_comment_commit_id,
     -- pull_review_comment_original_commit_id,
-    -- pull_review_comment_created_at,
-    -- pull_review_comment_updated_at,
-    -- pull_review_comment_author_association,
-    -- pull_review_comment_author_id,
-    -- pull_review_comment_author_login,
-    -- pull_review_comment_author_type,
+    -- pull_review_comment_created_at, DT
+    -- pull_review_comment_updated_at, DT
+    pull_review_comment_author_association,
+    pull_review_comment_author_id,
+    pull_review_comment_author_login,
+    pull_review_comment_author_type,
 
     -------------------------------------------------------------
     -- COMMIT COMMENT (CommitCommentEvent)
@@ -130,8 +132,8 @@ INSERT INTO year2020
     commit_comment_path,
     commit_comment_position,
     commit_comment_line,
-    -- commit_comment_created_at,
-    -- commit_comment_updated_at,
+    -- commit_comment_created_at, DT
+    -- commit_comment_updated_at, DT
     commit_comment_author_association,
     commit_comment_author_id,
     commit_comment_author_login,
@@ -219,18 +221,18 @@ SELECT
     -- or keep them as NULL/empty for events that don’t provide data.
     ---------------------------------------------------------
     -- JSONExtractString(payload, 'repository.url')                                 AS repo_url,
-    -- JSONExtractString(payload, 'repository.description')                         AS repo_description,
-    -- JSONExtractString(payload, 'repository.language')                            AS repo_language,
-    -- JSONExtractUInt  (payload, 'repository.stargazers_count')                    AS repo_stargazers_count,
-    -- JSONExtractUInt  (payload, 'repository.forks_count')                         AS repo_forks_count,
+    JSONExtractString(payload, 'repository.description')                         AS repo_description,
+    JSONExtractString(payload, 'repository.language')                            AS repo_language,
+    JSONExtractUInt  (payload, 'repository.stargazers_count')                    AS repo_stargazers_count,
+    JSONExtractUInt  (payload, 'repository.forks_count')                         AS repo_forks_count,
     -- JSONExtractUInt  (payload, 'repository.open_issues_count')                   AS repo_open_issues_count,
-    -- JSONExtractUInt  (payload, 'repository.size')                                AS repo_size,
-    -- JSONExtractBool  (payload, 'repository.has_issues')                          AS repo_has_issues,
-    -- JSONExtractBool  (payload, 'repository.has_projects')                        AS repo_has_projects,
-    -- JSONExtractBool  (payload, 'repository.has_downloads')                       AS repo_has_downloads,
-    -- JSONExtractBool  (payload, 'repository.has_wiki')                            AS repo_has_wiki,
-    -- JSONExtractBool  (payload, 'repository.has_pages')                           AS repo_has_pages,
-    -- JSONExtractString(payload, 'repository.default_branch')                      AS repo_default_branch,
+    JSONExtractUInt  (payload, 'repository.size')                                AS repo_size,
+    JSONExtractBool  (payload, 'repository.has_issues')                          AS repo_has_issues,
+    JSONExtractBool  (payload, 'repository.has_projects')                        AS repo_has_projects,
+    JSONExtractBool  (payload, 'repository.has_downloads')                       AS repo_has_downloads,
+    JSONExtractBool  (payload, 'repository.has_wiki')                            AS repo_has_wiki,
+    JSONExtractBool  (payload, 'repository.has_pages')                           AS repo_has_pages,
+    JSONExtractString(payload, 'repository.default_branch')                      AS repo_default_branch,
     -- JSONExtractDateTime(payload, 'repository.created_at')                        AS repo_created_at,
     -- JSONExtractDateTime(payload, 'repository.pushed_at')                         AS repo_pushed_at,
     -- JSONExtractDateTime(payload, 'repository.updated_at')                        AS repo_updated_at,
@@ -244,18 +246,18 @@ SELECT
     JSONExtractString (payload, 'issue.body')                                    AS issue_body,
     -- JSONExtractString (payload, 'issue.state')                                   AS issue_state,
     -- JSONExtractBool   (payload, 'issue.locked')                                  AS issue_locked,
-    -- JSONExtractUInt   (payload, 'issue.comments')                                AS issue_comments,
+    JSONExtractUInt   (payload, 'issue.comments')                                AS issue_comments,
     -- JSONExtractDateTime(payload, 'issue.created_at')                             AS issue_created_at,
     -- JSONExtractDateTime(payload, 'issue.updated_at')                             AS issue_updated_at,
     -- JSONExtractDateTime(payload, 'issue.closed_at')                              AS issue_closed_at,
 
-    -- JSONExtractUInt   (payload, 'issue.user.id')                                 AS issue_author_id,
-    -- JSONExtractString (payload, 'issue.user.login')                              AS issue_author_login,
-    -- JSONExtractString (payload, 'issue.user.type')                               AS issue_author_type,
-    -- JSONExtractString (payload, 'issue.author_association')                      AS issue_author_association,
+    JSONExtractUInt   (payload, 'issue.user.id')                                 AS issue_author_id,
+    JSONExtractString (payload, 'issue.user.login')                              AS issue_author_login,
+    JSONExtractString (payload, 'issue.user.type')                               AS issue_author_type,
+    JSONExtractString (payload, 'issue.author_association')                      AS issue_author_association,
 
-    -- JSONExtractUInt   (payload, 'issue.assignee.id')                             AS issue_assignee_id,
-    -- JSONExtractString (payload, 'issue.assignee.login')                          AS issue_assignee_login,
+    JSONExtractUInt   (payload, 'issue.assignee.id')                             AS issue_assignee_id,
+    JSONExtractString (payload, 'issue.assignee.login')                          AS issue_assignee_login,
 
     ---------------------------------------------------------
     -- ISSUE COMMENT (IssueCommentEvent)
@@ -282,19 +284,19 @@ SELECT
     -- JSONExtractDateTime(payload, 'pull_request.updated_at')                      AS pull_updated_at,
     -- JSONExtractDateTime(payload, 'pull_request.closed_at')                       AS pull_closed_at,
 
-    -- JSONExtractBool   (payload, 'pull_request.merged')                           AS pull_merged,
+    JSONExtractBool   (payload, 'pull_request.merged')                           AS pull_merged,
     -- JSONExtractDateTime(payload, 'pull_request.merged_at')                       AS pull_merged_at,
-    -- JSONExtractString (payload, 'pull_request.merge_commit_sha')                 AS pull_merge_commit_sha,
-    -- JSONExtractUInt   (payload, 'pull_request.merged_by.id')                     AS pull_merged_by_id,
-    -- JSONExtractString (payload, 'pull_request.merged_by.login')                  AS pull_merged_by_login,
-    -- JSONExtractString (payload, 'pull_request.merged_by.type')                   AS pull_merged_by_type,
+    JSONExtractString (payload, 'pull_request.merge_commit_sha')                 AS pull_merge_commit_sha,
+    JSONExtractUInt   (payload, 'pull_request.merged_by.id')                     AS pull_merged_by_id,
+    JSONExtractString (payload, 'pull_request.merged_by.login')                  AS pull_merged_by_login,
+    JSONExtractString (payload, 'pull_request.merged_by.type')                   AS pull_merged_by_type,
 
-    -- JSONExtractUInt   (payload, 'pull_request.commits')                          AS pull_commits,
-    -- JSONExtractUInt   (payload, 'pull_request.additions')                        AS pull_additions,
-    -- JSONExtractUInt   (payload, 'pull_request.deletions')                        AS pull_deletions,
-    -- JSONExtractUInt   (payload, 'pull_request.changed_files')                    AS pull_changed_files,
+    JSONExtractUInt   (payload, 'pull_request.commits')                          AS pull_commits,
+    JSONExtractUInt   (payload, 'pull_request.additions')                        AS pull_additions,
+    JSONExtractUInt   (payload, 'pull_request.deletions')                        AS pull_deletions,
+    JSONExtractUInt   (payload, 'pull_request.changed_files')                    AS pull_changed_files,
     -- JSONExtractUInt   (payload, 'pull_request.comments')                         AS pull_comments,
-    -- JSONExtractUInt   (payload, 'pull_request.review_comments')                  AS pull_review_comments,
+    JSONExtractUInt   (payload, 'pull_request.review_comments')                  AS pull_review_comments,
 
     -- JSONExtractString (payload, 'pull_request.base.ref')                         AS pull_base_ref,
     -- JSONExtractString (payload, 'pull_request.head.ref')                         AS pull_head_ref,
@@ -304,25 +306,25 @@ SELECT
     -- JSONExtractString (payload, 'pull_request.author_association')               AS pull_author_association,
     -- JSONExtractBool   (payload, 'pull_request.draft')                            AS pull_draft,
 
-    -- JSONExtractUInt   (payload, 'pull_request.requested_reviewer.id')            AS pull_requested_reviewer_id,
-    -- JSONExtractString (payload, 'pull_request.requested_reviewer.login')         AS pull_requested_reviewer_login,
-    -- JSONExtractString (payload, 'pull_request.requested_reviewer.type')          AS pull_requested_reviewer_type,
+    JSONExtractUInt   (payload, 'pull_request.requested_reviewer.id')            AS pull_requested_reviewer_id,
+    JSONExtractString (payload, 'pull_request.requested_reviewer.login')         AS pull_requested_reviewer_login,
+    JSONExtractString (payload, 'pull_request.requested_reviewer.type')          AS pull_requested_reviewer_type,
 
     ---------------------------------------------------------
     -- PULL REQUEST REVIEW COMMENT (PullRequestReviewCommentEvent)
     ---------------------------------------------------------
-    -- JSONExtractUInt   (payload, 'comment.id')                                    AS pull_review_comment_id,
-    -- JSONExtractString (payload, 'comment.body')                                  AS pull_review_comment_body,
-    -- JSONExtractString (payload, 'comment.path')                                  AS pull_review_comment_path,
-    -- JSONExtractInt    (payload, 'comment.position')                              AS pull_review_comment_position,
+    JSONExtractUInt   (payload, 'comment.id')                                    AS pull_review_comment_id,
+    JSONExtractString (payload, 'comment.body')                                  AS pull_review_comment_body,
+    JSONExtractString (payload, 'comment.path')                                  AS pull_review_comment_path,
+    JSONExtractInt    (payload, 'comment.position')                              AS pull_review_comment_position,
     -- JSONExtractString (payload, 'comment.commit_id')                             AS pull_review_comment_commit_id,
     -- JSONExtractString (payload, 'comment.original_commit_id')                    AS pull_review_comment_original_commit_id,
     -- JSONExtractDateTime(payload, 'comment.created_at')                           AS pull_review_comment_created_at,
     -- JSONExtractDateTime(payload, 'comment.updated_at')                           AS pull_review_comment_updated_at,
-    -- JSONExtractString (payload, 'comment.author_association')                    AS pull_review_comment_author_association,
-    -- JSONExtractUInt   (payload, 'comment.user.id')                               AS pull_review_comment_author_id,
-    -- JSONExtractString (payload, 'comment.user.login')                            AS pull_review_comment_author_login,
-    -- JSONExtractString (payload, 'comment.user.type')                             AS pull_review_comment_author_type,
+    JSONExtractString (payload, 'comment.author_association')                    AS pull_review_comment_author_association,
+    JSONExtractUInt   (payload, 'comment.user.id')                               AS pull_review_comment_author_id,
+    JSONExtractString (payload, 'comment.user.login')                            AS pull_review_comment_author_login,
+    JSONExtractString (payload, 'comment.user.type')                             AS pull_review_comment_author_type,
 
     ---------------------------------------------------------
     -- COMMIT COMMENT (CommitCommentEvent)
@@ -390,8 +392,8 @@ SELECT
     JSONExtractString (payload, 'release.author.login')                          AS release_author_login,
     JSONExtractString (payload, 'release.author.type')                           AS release_author_type,
     JSONExtractBool   (payload, 'release.prerelease')                            AS release_prerelease,
-    -- JSONExtractDateTime(payload, 'release.created_at')                           AS release_created_at,
-    -- JSONExtractDateTime(payload, 'release.published_at')                         AS release_published_at,
+    -- toDateTime(JSONExtractString(payload, 'release.created_at'))                 AS release_created_at,
+    -- toDateTime(JSONExtractString(payload, 'release.published_at'))             AS release_published_at,
     JSONExtractString (payload, 'release.body')                                  AS release_body
 
 FROM file(
