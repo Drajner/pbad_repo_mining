@@ -7,7 +7,7 @@ one csv data e.g. dependabot[bot]SEPARATOR2020-12-31 04:47:57 +0000
 For all cncf data,we use a script to get them.
 And then we aggregate the time zone and the number of developer who hava commits. The result data is in data/commits
 '''
-from cncf_configs import cncf_repos
+from supplementary_material.archived_files.cncf_configs import cncf_repos
 import pandas as pd
 def deal_commits(names):
     base_name = names[0]
