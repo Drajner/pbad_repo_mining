@@ -1,34 +1,15 @@
 import os
 import pandas as pd
 from simplified_client import ClickhouseClient
-from cncf_configs import cncf_repos
 '''
 the proxy class for getting data and saving data
 '''
 class DataProxy:
     def __init__(self,client:ClickhouseClient):
         self.client=client
-        self.cncf_ids = [repo['id'] for repo in cncf_repos]
-        self.graduated_ids = [repo['id'] for repo in cncf_repos if repo['status'] == 'graduated']
-        self.incubating_ids = [repo['id'] for repo in cncf_repos if repo['status'] == 'incubating']
-        self.sandbox_ids = [repo['id'] for repo in cncf_repos if repo['status'] == 'sandbox']
-        self.k8s_id=20580498
-        self.tikv_id = 48833910
-        self.repo_conditions=[
-            ('all', ""),
-            ('cncf', f"AND repo_id in {self.cncf_ids}"),
-            ('graduated', f"AND repo_id in {self.graduated_ids}"),
-            ('incubating', f"AND repo_id in {self.incubating_ids}"),
-            ('sandbox', f"AND repo_id in {self.sandbox_ids}"),
-            ('kubernetes', f"AND repo_id={self.k8s_id}"),
-            ('tikv', f"AND repo_id={self.tikv_id}")
-        ]
+        self.repo_conditions=[('all', "")]
     def get_basic_proxy(self):
-        repo_conditions = [('all', "", ""),
-                           ('cncf', f"WHERE repo_id in {self.cncf_ids}", f"AND repo_id in {self.cncf_ids}"),
-                           ('graduated', f"WHERE repo_id in {self.graduated_ids}", f"AND repo_id in {self.graduated_ids}"),
-                           ('incubating', f"WHERE repo_id in {self.incubating_ids}", f"AND repo_id in {self.incubating_ids}"),
-                           ('sandbox', f"WHERE repo_id in {self.sandbox_ids}", f"AND repo_id in {self.sandbox_ids}")]
+        repo_conditions = [('all', "", "")]
         index=[]
         data=[]
         for name, where_repo_condition, and_repo_condition in repo_conditions:
@@ -57,11 +38,7 @@ class DataProxy:
         rs=pd.DataFrame(data,index=index,columns=['c','oi','op','rpr','mp'])
         return rs
     def get_day_week_activity_proxy(self):
-        repo_conditions = [
-            self.repo_conditions[0],
-            self.repo_conditions[-2],
-            self.repo_conditions[-1]
-        ]
+        repo_conditions = self.repo_conditions
         df=pd.DataFrame()
         df['hour']=[j for _ in range(1, 8) for j in range(24)]
         df['week'] = [i for i in range(1, 8) for _ in range(24)]

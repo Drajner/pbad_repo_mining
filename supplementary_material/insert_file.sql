@@ -397,7 +397,7 @@ SELECT
     JSONExtractString (payload, 'release.body')                                  AS release_body
 
 FROM file(
-    'k8s-events.json.gz',
+    'wiselibs_newscript_to_2025.json.gz',
     'JSONEachRow',
     -- structure *of the raw GHArchive file*, not of github_events:
     'id String,

@@ -35,9 +35,9 @@ inside IDE , \supplementary_material package:
 5. Wejdz do clickhouse client wewnatrz kontenera: `docker exec -it clickhouse clickhouse-client`
 6. Sprawdzić czy się utworzyła tabela:
    ```
-    SELECT count(*) FROM year2020;
+    SELECT count(*) FROM github_log.year2020;
     SELECT type, count() 
-    FROM year2020
+    FROM github_log.year2020
     GROUP BY type
     ORDER BY count() DESC
     LIMIT 10;
@@ -45,9 +45,9 @@ inside IDE , \supplementary_material package:
 8. Wejdz do clickhouse client wewnatrz kontenera: `docker exec -it clickhouse clickhouse-client`
 9. Sprawdzić czy się utworzyła tabela:
    ```
-    SELECT count() FROM agg_year2020;
+    SELECT count() FROM github_log.agg_year2020;
     SELECT actor_login, sum(score) AS total_score
-    FROM agg_year2020
+    FROM github_log.agg_year2020
     GROUP BY actor_login
     ORDER BY total_score DESC
     LIMIT 10;
