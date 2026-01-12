@@ -3,66 +3,104 @@ import json
 import time
 from datetime import datetime, timezone
 import requests
-from typing import Callable, Dict, Any, Optional, Tuple, List
+from typing import Callable, Optional, Tuple, List
+from zoneinfo import ZoneInfo
+import re
 
-# =========================
-# --- CONFIGURATION ---
-# =========================
-GITHUB_TOKEN = "changeme"
-ORG_NAME = "Wiselibs"
-OUTPUT_FILE = "wiselibs_newscript_to_2025.json.gz"
-STOP_DATE = datetime(2025, 1, 1, tzinfo=timezone.utc) #pobieramy >= STOP_DATE
+GITHUB_TOKEN = "chengeme"
+ORG_NAME = "grafana"
+OUTPUT_FILE = "grafana_performance_100repos_test_to_2025.json.gz"
+STOP_DATE = datetime(2025, 1, 1, tzinfo=timezone.utc)
+
 PER_PAGE = 100
 REQUEST_TIMEOUT = 30
+REPO_NUMBER_LIMIT = 100
 
 HEADERS = {
     "Authorization": f"token {GITHUB_TOKEN}",
     "Accept": "application/vnd.github.v3+json",
-    "User-Agent": "org-activity-etl"
+    "User-Agent": "org-activity-etl",
 }
 
-# =========================
-# --- HELPERS ---
-# =========================
-def is_bot(user_login: str) -> bool:
-    """Bot identification according to methodology """
-    if not user_login:
-        return False
-    ll = user_login.lower()
-    return ll.endswith("[bot]") or ll.endswith("bot")
+SESSION = requests.Session()
+SESSION.headers.update(HEADERS)
+
+WARSAW_TZ = ZoneInfo("Europe/Warsaw")
+_LINK_NEXT_RE = re.compile(r'<([^>]+)>;\s*rel="next"')
+
+def _fmt_ts(ts: int) -> tuple[str, str]:
+    dt_utc = datetime.fromtimestamp(ts, tz=timezone.utc)
+    dt_pl = dt_utc.astimezone(WARSAW_TZ)
+    return dt_utc.strftime("%H:%M:%S UTC"), dt_pl.strftime("%H:%M:%S %Z")
+
 
 def parse_dt(iso_str: str) -> datetime:
-    # GitHub: "2025-01-01T00:00:00Z"
     return datetime.fromisoformat(iso_str.replace("Z", "+00:00")).astimezone(timezone.utc)
 
-#parse date from github response to reliably compare timestamps (against STOP_DATE)
+
 def dt_ge_stop(iso_str: str) -> bool:
     return parse_dt(iso_str) >= STOP_DATE
+
+
+def get_next_link(resp: requests.Response) -> Optional[str]:
+    link = resp.headers.get("Link") or ""
+    m = _LINK_NEXT_RE.search(link)
+    return m.group(1) if m else None
+
 
 def handle_rate_limit(resp: requests.Response) -> bool:
     # primary rate limit
     if resp.status_code == 403 and resp.headers.get("X-RateLimit-Remaining") == "0":
-        reset_time = resp.headers.get("X-RateLimit-Reset")
-        if reset_time:
-            reset_time = int(reset_time)
-            sleep_duration = max(reset_time - int(time.time()), 0) + 5
-            print(f"\n[LIMIT] Rate limit. Sleeping {datetime.fromtimestamp(reset_time, tz=timezone.utc).strftime('%H:%M:%S')} UTC ({sleep_duration}s)")
-            time.sleep(sleep_duration)
+        reset = resp.headers.get("X-RateLimit-Reset")
+        if reset and reset.isdigit():
+            reset_ts = int(reset)
+            sleep_s = max(reset_ts - int(time.time()), 0) + 5
+            utc_s, pl_s = _fmt_ts(reset_ts)
+            print(
+                f"\n[LIMIT] Primary rate limit. Wznowienie {pl_s} / {utc_s} (sleep {sleep_s}s)"
+            )
+            time.sleep(sleep_s)
             return True
-    # 429 (secondary/abuse/throttling)
+
+        sleep_s = 60
+        resume_ts = int(time.time()) + sleep_s
+        utc_s, pl_s = _fmt_ts(resume_ts)
+        print(f"\n[LIMIT] Primary rate limit. Wznowienie {pl_s} / {utc_s} (sleep {sleep_s}s)")
+        time.sleep(sleep_s)
+        return True
+
+    # secondary rate limit (abuse detection)
+    if resp.status_code == 403:
+        ra = resp.headers.get("Retry-After")
+        if ra and ra.isdigit():
+            sleep_s = int(ra) + 2
+            resume_ts = int(time.time()) + sleep_s
+            utc_s, pl_s = _fmt_ts(resume_ts)
+            print(
+                f"\n[LIMIT] Secondary rate limit. Wznowienie {pl_s} / {utc_s} (sleep {sleep_s}s)"
+            )
+            time.sleep(sleep_s)
+            return True
+
+    # too many requests
     if resp.status_code == 429:
         ra = resp.headers.get("Retry-After")
-        sleep_duration = int(ra) if (ra and ra.isdigit()) else 60
-        print(f"\n[LIMIT] 429 Retry-After={ra}. Sleeping {sleep_duration}s...")
-        time.sleep(sleep_duration)
+        sleep_s = int(ra) if (ra and ra.isdigit()) else 60
+        sleep_s += 2
+        resume_ts = int(time.time()) + sleep_s
+        utc_s, pl_s = _fmt_ts(resume_ts)
+        print(f"\n[LIMIT] 429 Too Many Requests. Wznowienie {pl_s} / {utc_s} (sleep {sleep_s}s)")
+        time.sleep(sleep_s)
         return True
+
     return False
+
 
 def make_request(url: str, params: Optional[dict] = None) -> Optional[requests.Response]:
     backoff = 2
     for attempt in range(6):
         try:
-            resp = requests.get(url, headers=HEADERS, params=params, timeout=REQUEST_TIMEOUT)
+            resp = SESSION.get(url, params=params, timeout=REQUEST_TIMEOUT)
 
             if handle_rate_limit(resp):
                 continue
@@ -84,31 +122,44 @@ def make_request(url: str, params: Optional[dict] = None) -> Optional[requests.R
 
     return None
 
-# The prefix is added to the event ID to guarantee global uniqueness
-# across different event types (issues, comments, pull requests),
-# since object IDs from the GitHub API are only unique within their own type,
-# unlike GHArchive’s native event IDs.
-def event_id(prefix: str, obj_id: int | str) -> str:
-    return f"{prefix}:{obj_id}"
 
-#pagination abstraction
-def list_all(url: str, base_params: dict) -> list:
-    out = []
-    page = 1
-    while True:
-        params = dict(base_params)
-        params.update({"per_page": PER_PAGE, "page": page})
-        resp = make_request(url, params)
+def iterate_items_until_stop_link(
+    url: str,
+    params_base: dict,
+    get_created_at: Callable[[dict], Optional[str]],
+    on_item: Callable[[dict, str], None],
+) -> int:
+    count = 0
+
+    next_url: Optional[str] = url
+    first_params = dict(params_base)
+    first_params["per_page"] = PER_PAGE
+
+    while next_url:
+        resp = make_request(next_url, first_params if next_url == url else None)
         if not resp:
             break
-        items = resp.json()
+
+        items = resp.json() or []
         if not items:
             break
-        out.extend(items)
-        if len(items) < PER_PAGE:
-            break
-        page += 1
-    return out
+
+        for item in items:
+            created_at = get_created_at(item)
+            if not created_at:
+                continue
+            if not dt_ge_stop(created_at):
+                return count
+            on_item(item, created_at)
+            count += 1
+
+        next_url = get_next_link(resp)
+        first_params = None
+
+    return count
+
+def event_id(prefix: str, obj_id: int | str) -> str:
+    return f"{prefix}:{obj_id}"
 
 def save_event(
     f_out,
@@ -120,11 +171,6 @@ def save_event(
     payload_dict: dict,
     eid: str,
 ):
-    """
-    Zachowujemy format RAW GHArchive-like:
-    {id,type,actor,repo,org,payload,created_at}
-    gdzie actor/repo/org/payload są Stringami zawierającymi JSON.
-    """
     event = {
         "id": eid,
         "type": event_type,
@@ -137,76 +183,21 @@ def save_event(
     json.dump(event, f_out, ensure_ascii=False)
     f_out.write("\n")
 
-def iterate_items_until_stop(
-    url: str,
-    params_base: dict,
-    get_created_at: Callable[[dict], Optional[str]],
-    on_item: Callable[[dict, str], None],
-) -> int:
-    """
-    Standard loop for paginated endpoints sorted by created desc.
-    Stops when created_at < STOP_DATE (early exit).
-    """
-    page = 1
-    count = 0
 
-    while True:
-        params = dict(params_base)
-        params.update({"per_page": PER_PAGE, "page": page})
-
-        resp = make_request(url, params)
-        if not resp:
-            break
-        items = resp.json()
-        if not items:
-            break
-
-        stop_now = False
-        for item in items:
-            created_at = get_created_at(item)
-            if not created_at:
-                continue
-            if not dt_ge_stop(created_at):
-                stop_now = True
-                continue
-
-            on_item(item, created_at)
-            count += 1
-
-        if stop_now or len(items) < PER_PAGE:
-            break
-        page += 1
-
-    return count
-
-
-# =========================
-# GET DATA FROM GITHUB API
-# =========================
-def get_org_dict(org: str) -> dict:
+def get_org_metadata(org: str) -> dict:
     org_resp = make_request(f"https://api.github.com/orgs/{org}")
     org_id = int(org_resp.json().get("id") or 0) if org_resp else 0
     return {"id": org_id, "login": org, "url": f"https://api.github.com/orgs/{org}"}
 
-# GET /orgs/{org}/repos
-def get_all_org_repos(org: str) -> List[str]:
-    repos = []
-    page = 1
-    while True:
-        url = f"https://api.github.com/orgs/{org}/repos"
-        resp = make_request(url, {"per_page": PER_PAGE, "page": page, "type": "all", "sort": "full_name", "direction": "asc"})
-        if not resp:
-            break
-        items = resp.json()
-        if not items:
-            break
-        repos.extend([r["name"] for r in items])
-        if len(items) < PER_PAGE:
-            break
-        page += 1
-    return repos
 
-#GET /repos/{owner}/{repo} - pobiera metadane repozytorium
+def get_org_repos(org: str, limit: int = REPO_NUMBER_LIMIT) -> List[str]:
+    resp = make_request(
+        f"https://api.github.com/orgs/{org}/repos",
+        {"per_page": min(limit, 100), "page": 1},
+    )
+    return [r["name"] for r in resp.json()] if resp else []
+
+
 def get_repo_meta(owner: str, repo: str) -> dict:
     url = f"https://api.github.com/repos/{owner}/{repo}"
     resp = make_request(url)
@@ -231,11 +222,8 @@ def get_repo_meta(owner: str, repo: str) -> dict:
         "license": lic.get("spdx_id") or lic.get("key") or "",
     }
 
+
 def build_repo_context(owner: str, repo: str) -> Tuple[str, dict, dict]:
-    """
-    Returns:
-      base_url, repo_dict, repository_payload (for payload.repository.*)
-    """
     base_url = f"https://api.github.com/repos/{owner}/{repo}"
     meta = get_repo_meta(owner, repo)
 
@@ -264,10 +252,8 @@ def build_repo_context(owner: str, repo: str) -> Tuple[str, dict, dict]:
 
     return base_url, repo_dict, repository_payload
 
-# =========================
-# EMITTERS (per event type)
-# =========================
 
+# IssueCommentEvent: action=created (comments in issues/PRs)
 def emit_issue_comment_events(f_out, base_url: str, repo_dict: dict, org_dict: dict, repository_payload: dict) -> int:
     url = f"{base_url}/issues/comments"
 
@@ -285,7 +271,7 @@ def emit_issue_comment_events(f_out, base_url: str, repo_dict: dict, org_dict: d
             event_id("issue_comment", c.get("id")),
         )
 
-    return iterate_items_until_stop(
+    return iterate_items_until_stop_link(
         url=url,
         params_base={"sort": "created", "direction": "desc"},
         get_created_at=lambda c: c.get("created_at"),
@@ -293,6 +279,7 @@ def emit_issue_comment_events(f_out, base_url: str, repo_dict: dict, org_dict: d
     )
 
 
+# IssuesEvent: action=opened
 def emit_issue_opened_events(f_out, base_url: str, repo_dict: dict, org_dict: dict, repository_payload: dict) -> int:
     url = f"{base_url}/issues"
 
@@ -312,7 +299,7 @@ def emit_issue_opened_events(f_out, base_url: str, repo_dict: dict, org_dict: di
             event_id("issue_open", it.get("id") or it.get("number")),
         )
 
-    return iterate_items_until_stop(
+    return iterate_items_until_stop_link(
         url=url,
         params_base={"state": "all", "sort": "created", "direction": "desc"},
         get_created_at=lambda it: it.get("created_at"),
@@ -320,37 +307,20 @@ def emit_issue_opened_events(f_out, base_url: str, repo_dict: dict, org_dict: di
     )
 
 
-def fetch_pr_full(base_url: str, pr_number: int) -> dict:
-    resp = make_request(f"{base_url}/pulls/{pr_number}")
-    return resp.json() if resp else {}
-
-
-def normalize_requested_reviewer(pr_full: dict) -> None:
-    # loader CH expects payload.pull_request.requested_reviewer.* (single object),
-    # GitHub gives requested_reviewers (list). We map the first one.
-    rr = pr_full.get("requested_reviewers") or []
-    if rr:
-        pr_full["requested_reviewer"] = rr[0]
-
-
-def emit_pull_request_events(f_out, base_url: str, repo_dict: dict, org_dict: dict, repository_payload: dict) -> int:
-    url = f"{base_url}/pulls"
-
+# PullRequestEvent: action=opened + PullRequestEvent: action=closed with pull_merged=1
+def emit_pull_request_events(
+    f_out,
+    base_url: str,
+    repo_dict: dict,
+    org_dict: dict,
+    repository_payload: dict,
+) -> int:
     emitted = 0
 
-    def on_item(pr: dict, created_at: str) -> None:
+    def save_opened(pr: dict, created_at: str) -> None:
         nonlocal emitted
-        pr_number = int(pr.get("number") or 0)
-        if pr_number <= 0:
-            return
-
-        pr_full = fetch_pr_full(base_url, pr_number) or pr
-        normalize_requested_reviewer(pr_full)
-
-        actor_author = pr_full.get("user") or {}
-
-        # opened
-        payload_open = {"action": "opened", "pull_request": pr_full, "repository": repository_payload}
+        actor_author = pr.get("user") or {}
+        payload_open = {"action": "opened", "pull_request": pr, "repository": repository_payload}
         save_event(
             f_out,
             "PullRequestEvent",
@@ -359,38 +329,59 @@ def emit_pull_request_events(f_out, base_url: str, repo_dict: dict, org_dict: di
             repo_dict,
             org_dict,
             payload_open,
-            event_id("pr_open", pr_full.get("id") or pr_number),
+            event_id("pr_open", pr.get("id") or pr.get("number")),
         )
         emitted += 1
 
-        # merged -> emit as closed event, but merged=true is inside pull_request
-        merged_at = pr_full.get("merged_at")
-        if merged_at and dt_ge_stop(merged_at):
-            merger = pr_full.get("merged_by") or actor_author
-            payload_merged = {"action": "closed", "pull_request": pr_full, "repository": repository_payload}
-            save_event(
-                f_out,
-                "PullRequestEvent",
-                merged_at,
-                merger,
-                repo_dict,
-                org_dict,
-                payload_merged,
-                event_id("pr_merged", pr_full.get("id") or pr_number),
-            )
-            emitted += 1
+    def save_merged(pr_obj: dict, merged_at: str) -> None:
+        nonlocal emitted
+        pr_number = int(pr_obj.get("number") or 0)
 
-    # paginacja “po created_at”; stop warunek = created_at < STOP_DATE
-    iterate_items_until_stop(
-        url=url,
+        # kto wykonał merge
+        merger = (pr_obj.get("merged_by") or pr_obj.get("user") or {})
+        payload_merged = {
+            "action": "closed",
+            "pull_merged": 1,
+            "pull_request": pr_obj,
+            "repository": repository_payload,
+        }
+        save_event(
+            f_out,
+            "PullRequestEvent",
+            merged_at,
+            merger,
+            repo_dict,
+            org_dict,
+            payload_merged,
+            event_id("pr_merged", pr_obj.get("id") or pr_number),
+        )
+        emitted += 1
+
+    # 1) PR opened
+    emitted += iterate_items_until_stop_link(
+        url=f"{base_url}/pulls",
         params_base={"state": "all", "sort": "created", "direction": "desc"},
         get_created_at=lambda pr: pr.get("created_at"),
-        on_item=on_item,
+        on_item=lambda pr, created_at: save_opened(pr, created_at),
+    )
+
+    # 2) PR merged
+    def on_closed_item(pr: dict, updated_at: str) -> None:
+        merged_at = pr.get("merged_at")
+        if merged_at and dt_ge_stop(merged_at):
+            save_merged(pr, merged_at)
+
+    emitted += iterate_items_until_stop_link(
+        url=f"{base_url}/pulls",
+        params_base={"state": "closed", "sort": "updated", "direction": "desc"},
+        get_created_at=lambda pr: pr.get("updated_at"),
+        on_item=on_closed_item,
     )
 
     return emitted
 
 
+# PullRequestReviewCommentEvent: action=created
 def emit_pr_review_comment_events(f_out, base_url: str, repo_dict: dict, org_dict: dict, repository_payload: dict) -> int:
     url = f"{base_url}/pulls/comments"
 
@@ -408,32 +399,41 @@ def emit_pr_review_comment_events(f_out, base_url: str, repo_dict: dict, org_dic
             event_id("pr_review_comment", c.get("id")),
         )
 
-    return iterate_items_until_stop(
+    return iterate_items_until_stop_link(
         url=url,
         params_base={"sort": "created", "direction": "desc"},
         get_created_at=lambda c: c.get("created_at"),
         on_item=on_item,
     )
 
-# =========================
-# ORCHESTRATION
-# =========================
-def process_repo(f_out, owner: str, repo: str, org_dict: dict) -> None:
-    base_url, repo_dict, repository_payload = build_repo_context(owner, repo)
 
-    print("  repo metadata ok")
+def run_fetch(category_name: str, fn) -> None:
+    print(f"  -> {category_name}...", end="", flush=True)
+    count = fn()
+    print(f" [Suma: {count}]")
 
-    c1 = emit_issue_comment_events(f_out, base_url, repo_dict, org_dict, repository_payload)
-    print(f"  issue comments: {c1}")
 
-    c2 = emit_issue_opened_events(f_out, base_url, repo_dict, org_dict, repository_payload)
-    print(f"  issues opened: {c2}")
+def process_repo(f_out, org: str, repo: str, org_dict: dict) -> None:
+    print("Pobieranie metadanych..", end="", flush=True)
+    base_url, repo_dict, repository_payload = build_repo_context(org, repo)
+    print(" OK")
 
-    c3 = emit_pull_request_events(f_out, base_url, repo_dict, org_dict, repository_payload)
-    print(f"  pull requests (opened+merged): {c3}")
-
-    c4 = emit_pr_review_comment_events(f_out, base_url, repo_dict, org_dict, repository_payload)
-    print(f"  pr review comments: {c4}")
+    run_fetch(
+        "Komentarze (IssueCommentEvent)",
+        lambda: emit_issue_comment_events(f_out, base_url, repo_dict, org_dict, repository_payload),
+    )
+    run_fetch(
+        "Issues opened (IssuesEvent)",
+        lambda: emit_issue_opened_events(f_out, base_url, repo_dict, org_dict, repository_payload),
+    )
+    run_fetch(
+        "Pull Requests (opened + merged)",
+        lambda: emit_pull_request_events(f_out, base_url, repo_dict, org_dict, repository_payload),
+    )
+    run_fetch(
+        "Review comments (PullRequestReviewCommentEvent)",
+        lambda: emit_pr_review_comment_events(f_out, base_url, repo_dict, org_dict, repository_payload),
+    )
 
 
 def main():
@@ -441,17 +441,20 @@ def main():
         print("Ustaw GITHUB_TOKEN.")
         return
 
-    org_dict = get_org_dict(ORG_NAME)
-    repos = get_all_org_repos(ORG_NAME)
+    org_metadata = get_org_metadata(ORG_NAME)
+    repos = get_org_repos(ORG_NAME, limit=100)
+    if not repos:
+        print("Brak repozytoriów w danej organizacji")
+        return
 
-    print(f"Start: org={ORG_NAME}, repos={len(repos)}, STOP_DATE>={STOP_DATE.isoformat()}")
+    print(f"Start: org={ORG_NAME}, repo={len(repos)}, STOP_DATE>={STOP_DATE.isoformat()}")
 
     with gzip.open(OUTPUT_FILE, "wt", encoding="utf-8") as f_out:
         for idx, repo in enumerate(repos, 1):
             print(f"\n[{idx}/{len(repos)}] {ORG_NAME}/{repo}")
-            process_repo(f_out, ORG_NAME, repo, org_dict)
+            process_repo(f_out, ORG_NAME, repo, org_metadata)
 
-    print(f"\nDone. Output: {OUTPUT_FILE}")
+    print(f"\nZakończone. Plik: {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":
