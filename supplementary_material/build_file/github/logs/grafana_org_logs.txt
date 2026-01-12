@@ -1,0 +1,717 @@
+czas wywolania : 1:07:10
+
+nazwa skryptu: build_for_org.py
+
+LOGI:
+
+
+Start: org=grafana, repo=100, STOP_DATE>=2025-01-01T00:00:00+00:00
+
+[1/100] grafana/carbon-relay-ng
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 57]
+  -> Issues opened (IssuesEvent)... [Suma: 85]
+  -> Pull Requests (opened + merged)... [Suma: 139]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 10]
+
+[2/100] grafana/grafana
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 30000]
+  -> Issues opened (IssuesEvent)... [Suma: 17627]
+  -> Pull Requests (opened + merged)... [Suma: 32523]
+  -> Review comments (PullRequestReviewCommentEvent)...
+[HTTP 502] https://api.github.com/repositories/15111821/pulls/comments?sort=created&direction=desc&per_page=100&page=104 params=None msg=Server Error
+  [BŁĄD] 502 Server Error: Bad Gateway for url: https://api.github.com/repositories/15111821/pulls/comments?sort=created&direction=desc&per_page=100&page=104. Próba 1/6... (sleep 2s)
+  [BŁĄD] Response ended prematurely. Próba 1/6... (sleep 2s)
+
+[HTTP 502] https://api.github.com/repositories/15111821/pulls/comments?sort=created&direction=desc&per_page=100&page=178 params=None msg=Server Error
+  [BŁĄD] 502 Server Error: Bad Gateway for url: https://api.github.com/repositories/15111821/pulls/comments?sort=created&direction=desc&per_page=100&page=178. Próba 1/6... (sleep 2s)
+ [Suma: 24521]
+
+[3/100] grafana/grafana-docker-dev-env
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[4/100] grafana/ansible-grafana
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[5/100] grafana/puppet-grafana
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[6/100] grafana/dockerana
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[7/100] grafana/synthesize
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[8/100] grafana/grafana-docker
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[9/100] grafana/metrictank
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[10/100] grafana/docs-base
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[11/100] grafana/usage-stats-handler
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 7]
+  -> Pull Requests (opened + merged)... [Suma: 6]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[12/100] grafana/grafana-zabbix
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 770]
+  -> Issues opened (IssuesEvent)... [Suma: 249]
+  -> Pull Requests (opened + merged)... [Suma: 291]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 100]
+
+[13/100] grafana/grafana-api-golang-client
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 9]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[14/100] grafana/influxdb-08-datasource
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[15/100] grafana/kairosdb-datasource
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[16/100] grafana/piechart-panel
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 2]
+  -> Issues opened (IssuesEvent)... [Suma: 11]
+  -> Pull Requests (opened + merged)... [Suma: 11]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[17/100] grafana/simple-json-datasource
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[18/100] grafana/kentik-app
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[19/100] grafana/grafana-plugin-repository
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[20/100] grafana/memo
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 23]
+  -> Issues opened (IssuesEvent)... [Suma: 13]
+  -> Pull Requests (opened + merged)... [Suma: 10]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[21/100] grafana/k6
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 1569]
+  -> Issues opened (IssuesEvent)... [Suma: 1104]
+  -> Pull Requests (opened + merged)... [Suma: 1529]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 2340]
+
+[22/100] grafana/clock-panel
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 84]
+  -> Issues opened (IssuesEvent)... [Suma: 260]
+  -> Pull Requests (opened + merged)... [Suma: 503]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 52]
+
+[23/100] grafana/worldmap-panel
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 2]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[24/100] grafana/homebrew-core
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[25/100] grafana/homebrew-grafana
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 8]
+  -> Issues opened (IssuesEvent)... [Suma: 35]
+  -> Pull Requests (opened + merged)... [Suma: 58]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[26/100] grafana/fake-data-gen
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 1]
+  -> Issues opened (IssuesEvent)... [Suma: 23]
+  -> Pull Requests (opened + merged)... [Suma: 34]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[27/100] grafana/loadgentest
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[28/100] grafana/snap_k8s
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[29/100] grafana/snap-plugin-collector-kubestate
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[30/100] grafana/cloud-graphite-scripts
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[31/100] grafana/snap-plugin-collector-gitstats
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[32/100] grafana/github-to-es
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[33/100] grafana/postman-to-k6
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[34/100] grafana/globalconf
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[35/100] grafana/terraform-provider-grafana
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 1071]
+  -> Issues opened (IssuesEvent)... [Suma: 519]
+  -> Pull Requests (opened + merged)... [Suma: 817]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 393]
+
+[36/100] grafana/graphite-mt
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 1]
+  -> Issues opened (IssuesEvent)... [Suma: 11]
+  -> Pull Requests (opened + merged)... [Suma: 16]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[37/100] grafana/gemini-scrollbar
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[38/100] grafana/grafana-sdk-mocks
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[39/100] grafana/azure-monitor-datasource
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[40/100] grafana/snap-plugin-collector-cadvisor
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[41/100] grafana/grafonnet-lib
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[42/100] grafana/react-grid-layout
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[43/100] grafana/azure-template
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[44/100] grafana/jsonnet-libs
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 135]
+  -> Issues opened (IssuesEvent)... [Suma: 194]
+  -> Pull Requests (opened + merged)... [Suma: 475]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 781]
+
+[45/100] grafana/worldping-gw
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[46/100] grafana/grafana-plugin-model
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[47/100] grafana/kubernetes-app
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[48/100] grafana/grafana-build-container
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[49/100] grafana/cortex
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[50/100] grafana/build-container-cross
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[51/100] grafana/loki
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 5090]
+  -> Issues opened (IssuesEvent)... [Suma: 4831]
+  -> Pull Requests (opened + merged)... [Suma: 8694]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 4767]
+
+[52/100] grafana/devtools
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[53/100] grafana/grafana-image-renderer
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 675]
+  -> Issues opened (IssuesEvent)... [Suma: 314]
+  -> Pull Requests (opened + merged)... [Suma: 490]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 315]
+
+[54/100] grafana/test.k6.io
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[55/100] grafana/influxdb-flux-datasource
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[56/100] grafana/grafana-polystat-panel
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 94]
+  -> Issues opened (IssuesEvent)... [Suma: 86]
+  -> Pull Requests (opened + merged)... [Suma: 157]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 15]
+
+[57/100] grafana/azure-data-explorer-datasource
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 545]
+  -> Issues opened (IssuesEvent)... [Suma: 453]
+  -> Pull Requests (opened + merged)... [Suma: 848]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 26]
+
+[58/100] grafana/grafana-sensu-app
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[59/100] grafana/jmeter-to-k6
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[60/100] grafana/mtail
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[61/100] grafana/monaco-kusto
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[62/100] grafana/grafana-operator
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 978]
+  -> Issues opened (IssuesEvent)... [Suma: 597]
+  -> Pull Requests (opened + merged)... [Suma: 962]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 696]
+
+[63/100] grafana/prometheus
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 23]
+  -> Issues opened (IssuesEvent)... [Suma: 11]
+  -> Pull Requests (opened + merged)... [Suma: 22]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 8]
+
+[64/100] grafana/grafana-oss-msi-generator
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[65/100] grafana/har-to-k6
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 6]
+  -> Issues opened (IssuesEvent)... [Suma: 27]
+  -> Pull Requests (opened + merged)... [Suma: 41]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 6]
+
+[66/100] grafana/cortex-tools
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 12]
+  -> Issues opened (IssuesEvent)... [Suma: 23]
+  -> Pull Requests (opened + merged)... [Suma: 30]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[67/100] grafana/openvas-docker
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[68/100] grafana/packer-do-marketplace
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[69/100] grafana/docsearch-configs
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[70/100] grafana/simple-json-backend-datasource
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[71/100] grafana/ksonnet
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[72/100] grafana/tail
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[73/100] grafana/go-generic-object-store
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[74/100] grafana/grafana-kiosk
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 103]
+  -> Issues opened (IssuesEvent)... [Suma: 48]
+  -> Pull Requests (opened + merged)... [Suma: 54]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 11]
+
+[75/100] grafana/loki-canary
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[76/100] grafana/jslib.k6.io
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 30]
+  -> Issues opened (IssuesEvent)... [Suma: 51]
+  -> Pull Requests (opened + merged)... [Suma: 95]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 16]
+
+[77/100] grafana/bigtable-backup
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[78/100] grafana/netlify-cms-oauth-provider-go
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[79/100] grafana/test-api.k6.io
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[80/100] grafana/k6-jslib-JSONPath
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[81/100] grafana/grafana-starter-panel
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[82/100] grafana/attic
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[83/100] grafana/simple-angular-panel
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[84/100] grafana/tanka
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 331]
+  -> Issues opened (IssuesEvent)... [Suma: 525]
+  -> Pull Requests (opened + merged)... [Suma: 1007]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 40]
+
+[85/100] grafana/gel-app
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[86/100] grafana/grafana-starter-datasource
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[87/100] grafana/grafana-plugin-sdk-go
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 208]
+  -> Issues opened (IssuesEvent)... [Suma: 274]
+  -> Pull Requests (opened + merged)... [Suma: 524]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 152]
+
+[88/100] grafana/golang
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[89/100] grafana/opcua-datasource
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[90/100] grafana/puppet-promtail
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 21]
+  -> Issues opened (IssuesEvent)... [Suma: 13]
+  -> Pull Requests (opened + merged)... [Suma: 15]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[91/100] grafana/kubernetes-diff-logger
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 33]
+  -> Issues opened (IssuesEvent)... [Suma: 51]
+  -> Pull Requests (opened + merged)... [Suma: 88]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[92/100] grafana/saml
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 21]
+  -> Issues opened (IssuesEvent)... [Suma: 30]
+  -> Pull Requests (opened + merged)... [Suma: 56]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 8]
+
+[93/100] grafana/django-saml2-auth
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 72]
+  -> Issues opened (IssuesEvent)... [Suma: 30]
+  -> Pull Requests (opened + merged)... [Suma: 26]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 8]
+
+[94/100] grafana/tutorials
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[95/100] grafana/k6-timescaledb-stack
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[96/100] grafana/cortex-jsonnet
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 1]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[97/100] grafana/agent
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 202]
+  -> Issues opened (IssuesEvent)... [Suma: 158]
+  -> Pull Requests (opened + merged)... [Suma: 305]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 39]
+
+[98/100] grafana/strava-datasource
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 9]
+  -> Issues opened (IssuesEvent)... [Suma: 26]
+  -> Pull Requests (opened + merged)... [Suma: 31]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 4]
+
+[99/100] grafana/k6-example-azure-pipelines
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 1]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+[100/100] grafana/k6-example-github-actions
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 0]
+  -> Issues opened (IssuesEvent)... [Suma: 0]
+  -> Pull Requests (opened + merged)... [Suma: 0]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 0]
+
+Zakończone. Plik: grafana_performance_100repos_test_to_2025.json.gz

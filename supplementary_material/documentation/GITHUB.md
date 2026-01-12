@@ -1,54 +1,65 @@
+# Skrypt github.py
+Skrypt służy do pobierania danych o aktywności wskazanej organizacji lub listy repozytoriów z pliku tekstowego, wykorzystując GITHUB REST API. 
+Flow:
+1. Iteracja przez repozytoria i pobranie ich metadanych
+2. Pobranie eventów (issues, prs, comments)
+3. Przekształcenie danych do płaskiego formatu JSON (GHArchive-like JSONEachRow)
+4. Zapis do skompresowanego pliku .json.gz
+
 ### Badane typy aktywności
 ![img.png](img.png)
 
-### kolumny w bazie zasilanej na podstawie uzyskanego pliku .json
-opisane w pliku data_description/data_description.csv
+### Zmienne konfiguracyjne
+- ORG_NAME: nazwa organizacji GitHub do przeskanowania
+- OUTPUT_FILE: nazwa pliku wyjściowego
+- STOP_DATE: skrypt nie pobiera danych starszych niż ta data
+- REPO_NUMBER_LIMIT: limit liczby repozytoriów do pobrania
+- REQUEST_TIMEOUT: maksymalny czas oczekiwania na odpowiedź API
 
 ### Użyte endpointy
 
-* GET /orgs/{org}
-    - pobiera metadane organizacji
-    - get_org_dict()
+|                  Nazwa eventu | Endpoint API     | Warunek pobierania | Opis                                                                                    |
+|------------------------------:|------------------|:------------------:|:----------------------------------------------------------------------------------------|
+|             IssueCommentEvent | /issues/comments |    sort=created    | wszystkie komentarze w issues i PR                                                      |
+|                   IssuesEvent | /issues          |     state=all      | otwarte zgłoszenia                                                                      |
+|        PullRequestEvent(open) | /pulls           |     state=all      | otwarte pull requesty                                                                   |
+|       PullRequestEvent(merge) | /pulls           |    state=closed    | sprawdza pole merged_at i jeśli istnieje to generuje event closed z flagą pull_merged=1 |
+| PullRequestReviewCommentEvent | /pulls/comments  |    sort=created    | komentarze do kodu (code review)                                                        |
 
-* GET /orgs/{org}/repos 
-    - pobiera listę repozytoriów wskazanej organizacji
-    - get_all_org_repos()
+### Obsługa rate limits
+- primary limit (403): sprawdzenie nagłówka X-RateLimit-Remaining. Jeśli 0, skrypt czeka do czasu wskazanego w X-RateLimit-Reset + 5 sekund
+- secondary limit (403/429): obsługuje nagłówek Retry-After
+- backoff: dla innych błędów wydłużenie czasu oczekiwania
 
-* GET /repos/{owner}/{repo}
-    - pobierane metadane każdego repozytorium
-    - get_repo_meta(), build_repo_context()
+### Model danych wyjściowych 
+Plik wynikowy zawiera po jednym obiekcie JSON w każdej linii (format JSONEachRow). 
 
-* GET /repos/{owner}/{repo}/issues (IssuesEvent)
-    - pobiera dane IssuesEvent opened, z filtrem na brak pull_request
-    - paginacja
-    - emit_issue_opened_events()
+`{
+  "id": "typ_zdarzenia:id_obiektu",
+  "type": "NazwaZdarzenia",          
+  "created_at": "ISO-8601 Timestamp",
+  "actor": "{...}",                
+  "repo": "{...}",              
+  "org": "{...}",                 
+  "payload": "{...}"               
+}`
+### Załadowanie danych
+Wynikowy plik jest gotowy do załadowania do bazy Clickhouse przy pomocy skryptu insert_file.sql
 
-* GET /repos/{owner}/{repo}/issues/comments
-    - pobiera dane IssueCommentEvent created
-    - paginacja
-    - emit_issue_comment_events()
+### Anonimizacja danych
+Dane kluczowe dla analizy (nie wolno modyfikować):
+- created_at, merged_at
+- type
+- payload.action
+- payload.pull_request.merged
 
-* GET /repos/{owner}/{repo}/pulls 
-    - dane do PullRequestEvent opened and merged (as closed+merged)
-    - paginacja
-    - emit_pull_request_events()
-    - dodatkowo dla każdego pobranie szczegółów: GET /repos/{owner}/{repo}/pulls/{pull_number}
-    - fetch_pr_full()
+Dane, które nie są analizowane:
+- treści body i title (tytuły, treści komentarzy etc)
+- linki url 
+- szczegóły git: commit_id, etc
+- emaile
 
-* GET /repos/{owner}/{repo}/pulls/{pull_number}/comments
-    - dane dla PullRequestReviewCommentEvent created 
-    - paginacja
-    - emit_pr_review_comment_events()
-
-### Rate limity i http statuses
-    - 200 OK
-    - 401 Unauthorized
-    - 403 Forbidden
-    - 404 Not Found
-    - 422 Unprocessable Entity: oznacza limit paginacji dla dużych datasetów
-    - 403 i 429 może oznaczać rate limit
-    - w celu monitorowania rate limitów/retry należy odczytywać nagłówki:
-        X-RateLimit-Limit
-        X-RateLimit-Remaining
-        X-RateLimit-Reset
-        Retry-After
+Dane do zahashowania:
+- actor.login
+- actor.id
+- repo.name

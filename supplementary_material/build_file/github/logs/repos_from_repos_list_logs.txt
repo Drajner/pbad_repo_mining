@@ -1,0 +1,32 @@
+Start: 4 repozytoriów z pliku repos_list.txt
+STOP_DATE >= 2025-01-01T00:00:00+00:00
+
+[1/4] grafana/carbon-relay-ng
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 58]
+  -> Issues opened (IssuesEvent)... [Suma: 85]
+  -> Pull Requests (opened + merged)... [Suma: 139]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 10]
+
+[2/4] WiseLibs/better-sqlite3
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 392]
+  -> Issues opened (IssuesEvent)... [Suma: 122]
+  -> Pull Requests (opened + merged)... [Suma: 89]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 30]
+
+[3/4] grafana/k6
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 1569]
+  -> Issues opened (IssuesEvent)... [Suma: 1104]
+  -> Pull Requests (opened + merged)... [Suma: 1529]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 2340]
+
+[4/4] kubernetes/examples
+Pobieranie metadanych.. OK
+  -> Komentarze (IssueCommentEvent)... [Suma: 144]
+  -> Issues opened (IssuesEvent)... [Suma: 38]
+  -> Pull Requests (opened + merged)... [Suma: 59]
+  -> Review comments (PullRequestReviewCommentEvent)... [Suma: 165]
+
+Zakończone. Plik: selected_repos_to_2025.json.gz
