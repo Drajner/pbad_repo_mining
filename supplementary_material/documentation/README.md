@@ -25,6 +25,10 @@ Here are descriptions of the Python script files:
 inside IDE , \supplementary_material package:
 1. `docker cp k8s-events.json.gz clickhouse:/var/lib/clickhouse/user_files/k8s-events.json.gz`
 2. Wejdz do clickhouse client wewnatrz kontenera: `docker exec -it clickhouse clickhouse-client`
+2*. Wyczyscic poprzednie dane: 
+    ```
+   TRUNCATE TABLE github_log.year2020
+   ```
 3. Sprawdzic czy załadowały się dane: 
     ```
     SHOW DATABASES;

@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS github_log;
 
 USE github_log;
 
-CREATE TABLE IF NOT EXISTS year2020
+CREATE TABLE IF NOT EXISTS event_analysis
 (
     id String,
     type String,

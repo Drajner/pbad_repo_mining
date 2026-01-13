@@ -1,6 +1,6 @@
 USE github_log;
 
-CREATE TABLE IF NOT EXISTS agg_year2020
+CREATE TABLE IF NOT EXISTS agg_event_analysis
 (
     actor_id            UInt64,
     actor_login         String,
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS agg_year2020
 ENGINE = MergeTree
 ORDER BY (repo_id, actor_id, week, hour);
 
-INSERT INTO agg_year2020
+INSERT INTO agg_event_analysis
 SELECT
     actor_id,
     actor_login,
@@ -38,7 +38,7 @@ SELECT
       + open_pull * 3
       + merge_pull * 4
       + pull_review_comment * 2                                                       AS score
-FROM year2020
+FROM event_analysis
 GROUP BY
     actor_id,
     actor_login,

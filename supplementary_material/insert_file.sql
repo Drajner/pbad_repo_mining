@@ -2,7 +2,7 @@ USE github_log;
 
 SET date_time_input_format = 'best_effort';
 
-INSERT INTO year2020
+INSERT INTO event_analysis
 (
     -- CORE EVENT FIELDS
     id,
@@ -397,7 +397,7 @@ SELECT
     JSONExtractString (payload, 'release.body')                                  AS release_body
 
 FROM file(
-    'wiselibs_newscript_to_2025.json.gz',
+    'events_from_github.json.gz',
     'JSONEachRow',
     -- structure *of the raw GHArchive file*, not of github_events:
     'id String,
