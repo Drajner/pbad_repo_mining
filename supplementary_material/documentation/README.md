@@ -17,41 +17,35 @@ Here are descriptions of the Python script files:
 # DB setup:
 
 - Run docker compose: `docker compose up`
-- Fill db with schema.sql: `cat schema.sql | docker exec -i clickhouse clickhouse-client -n`
-- Fill db with data: `cat sample_data.sql | docker exec -i clickhouse clickhouse-client -n`
 
 # UPLOADING DATA TO CLICKHOUSE DB:
 
 inside IDE , \supplementary_material package:
-1. `docker cp k8s-events.json.gz clickhouse:/var/lib/clickhouse/user_files/k8s-events.json.gz`
+1. `docker cp events_from_github.json.gz clickhouse:/var/lib/clickhouse/user_files/events_from_github.json.gz`
 2. Wejdz do clickhouse client wewnatrz kontenera: `docker exec -it clickhouse clickhouse-client`
-2*. Wyczyscic poprzednie dane: 
-    ```
-   TRUNCATE TABLE github_log.year2020
-   ```
-3. Sprawdzic czy załadowały się dane: 
+3. Sprawdzic czy utworzyła się tabela: 
     ```
     SHOW DATABASES;
     USE github_log;
     SHOW TABLES;
-    DESCRIBE TABLE year2020;
-4. Odpalić skrypt tworzacy tabele year2020:  `Get-Content insert_file.sql | docker exec -i clickhouse clickhouse-client --multiquery`
+    DESCRIBE TABLE event_analysis;
+4. Odpalić skrypt ładujący dane:  `Get-Content insert_file.sql | docker exec -i clickhouse clickhouse-client --multiquery`
 5. Wejdz do clickhouse client wewnatrz kontenera: `docker exec -it clickhouse clickhouse-client`
-6. Sprawdzić czy się utworzyła tabela:
+6. Sprawdzić czy załadowały się dane:
    ```
-    SELECT count(*) FROM github_log.year2020;
+    SELECT count(*) FROM github_log.event_analysis;
     SELECT type, count() 
-    FROM github_log.year2020
+    FROM github_log.event_analysis
     GROUP BY type
     ORDER BY count() DESC
     LIMIT 10;
-7. Odpalić skrypt tworzacy wersje zagregowana tabeli year2020: ` Get-Content .\agg_table.sql | docker exec -i clickhouse clickhouse-client --multiquery`
+7. Odpalić skrypt tworzacy wersje zagregowana tabeli: ` Get-Content .\agg_table.sql | docker exec -i clickhouse clickhouse-client --multiquery`
 8. Wejdz do clickhouse client wewnatrz kontenera: `docker exec -it clickhouse clickhouse-client`
 9. Sprawdzić czy się utworzyła tabela:
    ```
-    SELECT count() FROM github_log.agg_year2020;
+    SELECT count() FROM github_log.agg_event_analysis;
     SELECT actor_login, sum(score) AS total_score
-    FROM github_log.agg_year2020
+    FROM github_log.agg_event_analysis
     GROUP BY actor_login
     ORDER BY total_score DESC
     LIMIT 10;
@@ -92,3 +86,7 @@ This script receives github events from last 3 months and creates a file in GHAr
      - what-cncf.png: ludzie i boty
      - what-maturity.png: tylko ludzie
      - what-project.png: tylko ludzie
+
+## weryfikacja danych w Clickhouse localhost
+- WebSQL UI
+![img_1.png](img_1.png)

@@ -1,4 +1,5 @@
 import gzip
+import hashlib
 import json
 import time
 from datetime import datetime, timezone
@@ -7,14 +8,14 @@ from typing import Callable, Optional, Tuple, List
 from zoneinfo import ZoneInfo
 import re
 
-GITHUB_TOKEN = "chengeme"
+GITHUB_TOKEN = "changeme"
 ORG_NAME = "grafana"
-OUTPUT_FILE = "output_files/grafana_performance_100repos_test_to_2025.json.gz"
+OUTPUT_FILE = "output_files/test_anonimizacji.json.gz"
 STOP_DATE = datetime(2025, 1, 1, tzinfo=timezone.utc)
 
 PER_PAGE = 100
 REQUEST_TIMEOUT = 30
-REPO_NUMBER_LIMIT = 100
+REPO_NUMBER_LIMIT = 20
 
 HEADERS = {
     "Authorization": f"token {GITHUB_TOKEN}",
@@ -27,6 +28,33 @@ SESSION.headers.update(HEADERS)
 
 WARSAW_TZ = ZoneInfo("Europe/Warsaw")
 _LINK_NEXT_RE = re.compile(r'<([^>]+)>;\s*rel="next"')
+
+HASH_SALT = "bla_bla"
+SENSITIVE_KEYS = {
+    "login",
+    "email",
+    "name",
+    "avatar_url",
+    "gravatar_id"
+}
+
+def hash_value(value) -> Optional[str]:
+    if value is None:
+        return None
+    raw = f"{HASH_SALT}{value}"
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+def anonymize_struct(data):
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if key in SENSITIVE_KEYS and isinstance(value, (str, int, float)):
+                data[key] = hash_value(value)
+            elif isinstance(value, (dict, list)):
+                anonymize_struct(value)
+    elif isinstance(data, list):
+        for item in data:
+            anonymize_struct(item)
+    return data
 
 def _fmt_ts(ts: int) -> tuple[str, str]:
     dt_utc = datetime.fromtimestamp(ts, tz=timezone.utc)
@@ -98,7 +126,7 @@ def handle_rate_limit(resp: requests.Response) -> bool:
 
 def make_request(url: str, params: Optional[dict] = None) -> Optional[requests.Response]:
     backoff = 2
-    for attempt in range(6):
+    for attempt in range(3):
         try:
             resp = SESSION.get(url, params=params, timeout=REQUEST_TIMEOUT)
 
@@ -171,6 +199,12 @@ def save_event(
     payload_dict: dict,
     eid: str,
 ):
+    if actor_dict:
+        anonymize_struct(actor_dict)
+
+    if payload_dict:
+        anonymize_struct(payload_dict)
+
     event = {
         "id": eid,
         "type": event_type,
@@ -442,7 +476,7 @@ def main():
         return
 
     org_metadata = get_org_metadata(ORG_NAME)
-    repos = get_org_repos(ORG_NAME, limit=100)
+    repos = get_org_repos(ORG_NAME, REPO_NUMBER_LIMIT)
     if not repos:
         print("Brak repozytoriów w danej organizacji")
         return
