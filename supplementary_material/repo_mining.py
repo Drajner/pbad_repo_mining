@@ -96,14 +96,14 @@ def filter_event_for_clickhouse(raw_event):
 
     if 'repo' in raw_event:
         filtered['repo'] = {
-            'id': raw_event['repo'].get('id'),
-            'name': raw_event['repo'].get('name')
+            'id': get_hash_int(raw_event['repo'].get('id')),
+            'name': REDACTED_BODY
         }
 
     if 'org' in raw_event:
         filtered['org'] = {
-            'id': raw_event['org'].get('id'),
-            'login': raw_event['org'].get('login')
+            'id': get_hash_int(raw_event['org'].get('id')),
+            'login': get_hash_str(raw_event['org'].get('login'))
         }
 
     if 'payload' in raw_event:
@@ -143,7 +143,7 @@ def filter_event_for_clickhouse(raw_event):
             new_iss = {
                 'id': iss.get('id'),
                 'number': iss.get('number'),
-                'title': iss.get('title'),
+                'title': REDACTED_BODY,
                 'body': REDACTED_BODY,
                 'comments': iss.get('comments'),
                 'author_association': iss.get('author_association'),
@@ -160,7 +160,7 @@ def filter_event_for_clickhouse(raw_event):
                 'id': com.get('id'),
                 'body': REDACTED_BODY,
                 'author_association': com.get('author_association'),
-                'path': com.get('path'),
+                'path': get_hash_str(com.get('path')),
                 'position': com.get('position'),
                 'line': com.get('line'),
             }
@@ -172,7 +172,7 @@ def filter_event_for_clickhouse(raw_event):
             pr = p['pull_request']
             new_pr = {
                 'merged': pr.get('merged'),
-                'merge_commit_sha': pr.get('merge_commit_sha'),
+                'merge_commit_sha': get_hash_str(pr.get('merge_commit_sha')),
                 'commits': pr.get('commits'),
                 'additions': pr.get('additions'),
                 'deletions': pr.get('deletions'),
