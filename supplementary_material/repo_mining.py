@@ -10,10 +10,14 @@ import re
 
 # DO ZMIANY ==================
 GITHUB_TOKEN = "change-me"
-TARGET_REPOS = [
-    "grafana/carbon-relay-ng",
-    "WiseLibs/better-sqlite3",
+EXCLUDED_REPOS = [
+    "grafana/grafana",
+    "grafana/k6",
+    "grafana/loki",
+    "grafana/grafana-image-renderer",
 ]
+ORG_NAME = "grafana"
+REPO_NUMBER_LIMIT = 20
 # ==================
 
 OUTPUT_FILE = "repo_mining_wynik.json.gz"
@@ -21,7 +25,6 @@ STOP_DATE = datetime(2025, 1, 14, tzinfo=timezone.utc)
 
 PER_PAGE = 100
 REQUEST_TIMEOUT = 30
-REPO_NUMBER_LIMIT = 1
 
 HEADERS = {
     "Authorization": f"token {GITHUB_TOKEN}",
@@ -97,7 +100,7 @@ def filter_event_for_clickhouse(raw_event):
     if 'repo' in raw_event:
         filtered['repo'] = {
             'id': get_hash_int(raw_event['repo'].get('id')),
-            'name': REDACTED_BODY
+            'name': get_hash_str(raw_event['repo'].get('name'))
         }
 
     if 'org' in raw_event:
@@ -624,21 +627,51 @@ def process_repo(f_out, org: str, repo: str, org_dict: dict) -> None:
 
 
 def main():
-    print(f"Liczba repozytoriów={len(TARGET_REPOS)}, STOP_DATE>={STOP_DATE.isoformat()}")
-    org_cache = {}
+    if not ORG_NAME:
+        print("[ERROR] Nie podano nazwy organizacji (ORG_NAME).")
+        return
 
+    print(f"[START] Rozpoczecie pobierania danych dla org={ORG_NAME}, limit_repo={REPO_NUMBER_LIMIT}, DATE>={STOP_DATE.isoformat()}")
+    org_metadata = get_org_metadata(ORG_NAME)
+    url = f"https://api.github.com/orgs/{ORG_NAME}/repos"
+    params = {"per_page": 100, "type": "all"}
     with gzip.open(OUTPUT_FILE, "wt", encoding="utf-8") as f_out:
-        for idx, full_name in enumerate(TARGET_REPOS, 1):
-            owner, repo_name = full_name.split('/', 1)
+        processed_count = 0
 
-            if owner not in org_cache:
-                print(f"  [Info] Pobieranie info o organizacji '{owner}'..")
-                org_cache[owner] = get_org_metadata(owner)
+        while url:
+            if processed_count >= REPO_NUMBER_LIMIT:
+                print(f"[LIMIT] Osiągnięto limit {REPO_NUMBER_LIMIT} repozytoriów")
+                break
 
-            current_org_meta = org_cache[owner]
+            resp = make_request(url, params)
+            if not resp:
+                break
 
-            print(f"\n[{idx}/{len(TARGET_REPOS)}] {full_name}")
-            process_repo(f_out, owner, repo_name, current_org_meta)
+            repos_page = resp.json() or []
+            if not repos_page:
+                break
+
+            for repo_data in repos_page:
+                if processed_count >= REPO_NUMBER_LIMIT:
+                    break
+
+                full_name = repo_data.get("full_name", "")
+                name = repo_data.get("name", "")
+
+                if full_name in EXCLUDED_REPOS:
+                    print(f"[SKIP] Pominięto repozytorium: {full_name} (na liście EXCLUDED_REPOS)")
+                    continue
+
+                processed_count += 1
+                print(f"\n[{processed_count}] {full_name}")
+                process_repo(f_out, ORG_NAME, name, org_metadata)
+
+            if processed_count >= REPO_NUMBER_LIMIT:
+                print(f"\n[LIMIT] Osiągnięto limit {REPO_NUMBER_LIMIT} repozytoriów.")
+                break
+
+            url = get_next_link(resp)
+            params = None
 
     print(f"\nWynikowy plik: {OUTPUT_FILE}")
 
