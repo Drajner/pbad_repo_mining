@@ -1,7 +1,7 @@
 from clickhouse_driver import Client
 
 class ClickhouseClient:
-    def __init__(self, database, host='127.0.0.1', port=9000, user='default', password='', table='year2020', agg_table='agg_year2020'):
+    def __init__(self, database, host='127.0.0.1', port=9000, user='default', password='', table='event_analysis', agg_table='agg_event_analysis'):
         self.database = database
         self.host = host
         self.port = port
