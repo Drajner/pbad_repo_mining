@@ -1,6 +1,7 @@
 import gzip
 import hashlib
 import json
+import os
 import time
 from datetime import datetime, timezone
 import requests
@@ -9,7 +10,7 @@ from zoneinfo import ZoneInfo
 import re
 
 # DO ZMIANY ==================
-GITHUB_TOKEN = "change-me"
+GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 EXCLUDED_REPOS = [
     "grafana/grafana",
     "grafana/k6",

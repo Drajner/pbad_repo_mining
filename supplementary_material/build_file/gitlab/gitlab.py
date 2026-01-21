@@ -1,6 +1,7 @@
 import gzip
 import hashlib
 import json
+import os
 import time
 from datetime import datetime, timezone
 from typing import Callable, Optional, Any, Dict, List, Tuple
@@ -9,7 +10,7 @@ import requests
 import urllib.parse
 
 # CONFIG ==================
-GITLAB_TOKEN = "glpat-vcgLmbgSudidk2dhFyuKum86MQp1OmpxNmY0Cw.01.1213p4b8a"
+GITLAB_TOKEN = os.environ["GITLAB_TOKEN"]
 GITLAB_BASE_URL = "https://gitlab.com/api/v4"
 GROUP_PATH = "grafana"
 EXCLUDED_PROJECTS = [
