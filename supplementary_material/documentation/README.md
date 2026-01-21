@@ -23,7 +23,10 @@ Here are descriptions of the Python script files:
 inside IDE , \supplementary_material package:
 1. `docker cp repo_mining_wynik.json.gz clickhouse:/var/lib/clickhouse/user_files/events_from_github.json.gz`
 2. Wejdz do clickhouse client wewnatrz kontenera: `docker exec -it clickhouse clickhouse-client`
-3. Wyczyscic poprzednie tabele: TRUNCATE TABLE github_log.event_analysis, TRUNCATE TABLE github_log.agg_event_analysis
+3. Wyczyscic poprzednie tabele:
+    ```
+   TRUNCATE TABLE github_log.event_analysis
+    TRUNCATE TABLE github_log.agg_event_analysis
 3. Sprawdzic czy utworzyła się tabela: 
     ```
     SHOW DATABASES;
