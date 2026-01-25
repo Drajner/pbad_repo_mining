@@ -183,11 +183,10 @@ class ClickhouseClient:
     get time zone distribution of contributors
     '''
     def get_time_zone(self, repo_condition="", percent=0.2, work_hours=8, end_cur_hour=18):
-        agg_table = 'agg_year2020'
         actor_activity_sql = f'''
         SELECT actor_id,
         SUM(score)/366 AS actor_activity 
-        FROM {agg_table}
+        FROM {self.agg_table}
         WHERE actor_login NOT LIKE '%[bot]' AND actor_login NOT LIKE '%bot' {repo_condition}
         GROUP BY actor_id
         '''
@@ -199,7 +198,7 @@ class ClickhouseClient:
             SELECT actor_id FROM ({order_actor_activity_sql})
         '''
         actor_hour_activity_sql = f'''
-        SELECT actor_id,hour,SUM(score)/366 AS activity FROM {agg_table} GROUP BY actor_id,hour having actor_id in ({actor_ids})
+        SELECT actor_id,hour,SUM(score)/366 AS activity FROM {self.agg_table} GROUP BY actor_id,hour having actor_id in ({actor_ids})
         '''
         actor_hours_activity_sql = f'''
             SELECT actor_id,hour,SUM(activity) AS activity FROM
